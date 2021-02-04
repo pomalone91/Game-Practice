@@ -6,10 +6,17 @@
 //  Copyright © 2021 Paul Malone. All rights reserved.
 //
 
+#import <SDL2/SDL.h>
 #include <stdio.h>
 
+typedef struct {
+    int x, y;
+    short life;
+    char *name;
+    
+} Man;
+
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
+     
     return 0;
 }

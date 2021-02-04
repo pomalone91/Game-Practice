@@ -20,6 +20,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		25855F6725CB95A600D94E60 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +82,7 @@
 				25855F4225CB885600D94E60 /* Sources */,
 				25855F4325CB885600D94E60 /* Frameworks */,
 				25855F4425CB885600D94E60 /* CopyFiles */,
+				25855F6725CB95A600D94E60 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -241,6 +252,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T3Q6UYT2K5;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				"HEADER_SEARCH_PATHS[arch=*]" = /System/Library/Frameworks/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -251,6 +264,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T3Q6UYT2K5;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				"HEADER_SEARCH_PATHS[arch=*]" = /System/Library/Frameworks/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
