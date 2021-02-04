@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		251824A525CC64F500BBF57B /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */; };
+		251824A625CC64F500BBF57B /* libSDL2-2.0.0.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		25855F4A25CB885600D94E60 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 25855F4925CB885600D94E60 /* main.c */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +28,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				251824A625CC64F500BBF57B /* libSDL2-2.0.0.dylib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -33,6 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "../../../../../usr/local/Cellar/sdl2/2.0.14_1/lib/libSDL2-2.0.0.dylib"; sourceTree = "<group>"; };
 		25855F4625CB885600D94E60 /* Game Practice */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Game Practice"; sourceTree = BUILT_PRODUCTS_DIR; };
 		25855F4925CB885600D94E60 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -42,17 +46,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				251824A525CC64F500BBF57B /* libSDL2-2.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		251824A325CC64F500BBF57B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		25855F3D25CB885600D94E60 = {
 			isa = PBXGroup;
 			children = (
 				25855F4825CB885600D94E60 /* Game Practice */,
 				25855F4725CB885600D94E60 /* Products */,
+				251824A325CC64F500BBF57B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -253,7 +267,11 @@
 				DEVELOPMENT_TEAM = T3Q6UYT2K5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
-				"HEADER_SEARCH_PATHS[arch=*]" = /System/Library/Frameworks/;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/sdl2/2.0.14_1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -265,7 +283,11 @@
 				DEVELOPMENT_TEAM = T3Q6UYT2K5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
-				"HEADER_SEARCH_PATHS[arch=*]" = /System/Library/Frameworks/;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/sdl2/2.0.14_1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
