@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <time.h>
 
 typedef struct
 {
@@ -19,13 +20,48 @@ typedef struct
 
 typedef struct
 {
+    int x, y;
+} Star;
+
+typedef struct
+{
     // Player
     Man man;
     
+    Star stars[100];
+    
     // Images
-    SDL_Texture *beetle;
+    SDL_Texture *star;
+    
+    SDL_Renderer *renderer;
     
 } Gamestate;
+
+void loadGame(Gamestate *gameState)
+{
+    gameState->man.x = 220;
+    gameState->man.y = 140;
+    
+    SDL_Surface *starSurface;             // Declare a surface for a texture
+    
+    // Load images and create rendering texture
+    starSurface = IMG_Load("star.png");
+    if (starSurface == NULL) {
+        printf("Couldn't find star sprite\n");
+        SDL_Quit();
+        exit(1);
+    }
+    
+    // Add image to gamestate
+    gameState->star = SDL_CreateTextureFromSurface(gameState->renderer, starSurface);
+    SDL_FreeSurface(starSurface);
+    
+    // Set up star images
+    for (int i = 0; i < 100; i++) {
+        gameState->stars[i].x = random()%640; //i*64;
+        gameState->stars[i].y = random()%480; //i*32;
+    }
+}
 
 int processEvents(SDL_Window *window, Gamestate *gamestate)
 {
@@ -95,9 +131,11 @@ void doRender(SDL_Renderer *renderer, Gamestate *gamestate)
     SDL_Rect rect = { gamestate->man.x, gamestate->man.y, 80, 80 };
     SDL_RenderFillRect(renderer, &rect);
     
-    // Draw the image
-    SDL_Rect beetleRect = { 50, 50, 64, 64 };
-    SDL_RenderCopy(renderer, gamestate->beetle, NULL, &beetleRect);
+    for (int i = 0; i < 100; i++) {
+        // Draw the image
+        SDL_Rect beetleRect = { gamestate->stars[i].x, gamestate->stars[i].y, 64, 64 };
+        SDL_RenderCopy(renderer, gamestate->star, NULL, &beetleRect);
+    }
 
     // We're done drawing, present what has been drawn
     SDL_RenderPresent(renderer);
@@ -107,21 +145,19 @@ int main(int argc, char *argv[])
 {
     int processEvents(SDL_Window *window, Gamestate *gamestate);
     void doRender(SDL_Renderer *renderer, Gamestate *gamestate);
+    void loadGame(Gamestate *gameState);
     
     SDL_Window *window;                    // Declare a window
     SDL_Renderer *renderer;                // Declare a renderer
-    SDL_Surface *beetleSurface;             // Declare a surface for a texture
+    
     
     // Declare man object
-    Man man;
     Gamestate gamestate;
-    
-    man.x = 220;
-    man.y = 140;
-    gamestate.man = man;
 
     SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
     
+    // Initialize random number seed
+    srandom((int)time(NULL));
     
 
     //Create an application window with the following settings:
@@ -133,17 +169,10 @@ int main(int argc, char *argv[])
                               0);                                  // flags
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
-    // Load images and create rendering texture
-    beetleSurface = IMG_Load("manaworldbeetle1.png");
-    if (beetleSurface == NULL) {
-        printf("Couldn't find beetle sprite\n");
-        SDL_Quit();
-        return 1;
-    }
+    gamestate.renderer = renderer;
     
-    // Add image to gamestate
-    gamestate.beetle = SDL_CreateTextureFromSurface(renderer, beetleSurface);
-    SDL_FreeSurface(beetleSurface);
+    // Load the game
+    loadGame(&gamestate);
     
     // Set up event loop
     int done = 0;
@@ -164,7 +193,7 @@ int main(int argc, char *argv[])
     }
 
     // Close and destroy the window
-    SDL_DestroyTexture(gamestate.beetle);
+    SDL_DestroyTexture(gamestate.star);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 

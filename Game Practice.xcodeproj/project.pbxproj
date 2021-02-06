@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		251824A525CC64F500BBF57B /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */; };
 		251824A625CC64F500BBF57B /* libSDL2-2.0.0.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		256CD8F825CF047A007AACAE /* star.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 256CD8F725CF042D007AACAE /* star.png */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		258335B425CDE2E1001B3FDB /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 250C960C25CD02AD001856AA /* libSDL2_image-2.0.0.dylib */; };
 		258335B525CDE2EA001B3FDB /* libSDL2_image-2.0.0.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 250C960C25CD02AD001856AA /* libSDL2_image-2.0.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		258335B725CDE30F001B3FDB /* libpng16.16.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 258335B625CDE30F001B3FDB /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -30,6 +31,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				256CD8F825CF047A007AACAE /* star.png in CopyFiles */,
 				258335C725CDF890001B3FDB /* manaworldbeetle1.png in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -55,6 +57,7 @@
 /* Begin PBXFileReference section */
 		250C960C25CD02AD001856AA /* libSDL2_image-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_image-2.0.0.dylib"; path = "../../../../../usr/local/Cellar/sdl2_image/2.0.5/lib/libSDL2_image-2.0.0.dylib"; sourceTree = "<group>"; };
 		251824A425CC64F500BBF57B /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "../../../../../usr/local/Cellar/sdl2/2.0.14_1/lib/libSDL2-2.0.0.dylib"; sourceTree = "<group>"; };
+		256CD8F725CF042D007AACAE /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		258335B625CDE30F001B3FDB /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../../../../usr/local/Cellar/libpng/1.6.37/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 		258335B925CDE35C001B3FDB /* libjpeg.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjpeg.9.dylib; path = ../../../../../usr/local/Cellar/jpeg/9d/lib/libjpeg.9.dylib; sourceTree = "<group>"; };
 		258335BB25CDE36C001B3FDB /* libjpeg.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjpeg.9.dylib; path = ../../../../../usr/local/Cellar/jpeg/9d/lib/libjpeg.9.dylib; sourceTree = "<group>"; };
@@ -87,6 +90,7 @@
 		250C960E25CD0361001856AA /* images */ = {
 			isa = PBXGroup;
 			children = (
+				256CD8F725CF042D007AACAE /* star.png */,
 				258335C625CDF839001B3FDB /* manaworldbeetle1.png */,
 			);
 			path = images;
