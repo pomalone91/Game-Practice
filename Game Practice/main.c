@@ -10,6 +10,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define GRAVITY     0.35f
 
@@ -19,6 +20,7 @@ typedef struct
     float dy;   // Vertical velocity of player. Change in position applied once per frame
     short life;
     char *name;
+    bool onLedge;
 } Man;
 
 typedef struct
@@ -132,8 +134,9 @@ int processEvents(SDL_Window *window, Gamestate *gamestate)
     
     if (state[SDL_SCANCODE_RIGHT])
         gamestate->man.x += 10;
-    if (state[SDL_SCANCODE_UP] && gamestate->man.dy == 0.0f) {
+    if (state[SDL_SCANCODE_UP] && gamestate->man.onLedge == true) {
         gamestate->man.dy = -12;
+        gamestate->man.onLedge = false;
     }
 //    if (state[SDL_SCANCODE_DOWN]) {
 //        gamestate->man.y += 10;
@@ -202,11 +205,11 @@ void collisionDetect(Gamestate *game)
         
         if (my+mh > by && my < by+bh) {     // Check if we're at the same height as a ledge
             // If the man is standing to the right of the brick but his width is overlapping it
-            if (mx < bx+bw && mx+mw > bx+bw) {
+            if (mx < bx+bw && mx+mw > bx+bw && !game->man.onLedge) {
                 // Correct x position
                 game->man.x = bx+bw;
                 mx = bx+bw;
-            } else if (mx+mw > bx && mx < bx)   // If man is standing to the left of the ledge check if there is overlap
+            } else if (mx+mw > bx && mx < bx && !game->man.onLedge)   // If man is standing to the left of the ledge check if there is overlap
             {
                 game->man.x = bx-mw;
                 mx = bx-mw;
@@ -228,6 +231,7 @@ void collisionDetect(Gamestate *game)
                 
                 // Stop jump velocity
                 game->man.dy = 0.0f;
+                game->man.onLedge = true;
             }
         }
     }
