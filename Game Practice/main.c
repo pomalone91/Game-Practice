@@ -11,17 +11,25 @@
 #include <stdio.h>
 #include <time.h>
 
+#define GRAVITY     0.35f
+
 typedef struct
 {
-  int x, y;
-  short life;
-  char *name;
+    float x, y; // position of block
+    float dy;   // Vertical velocity of player. Change in position applied once per frame
+    short life;
+    char *name;
 } Man;
 
 typedef struct
 {
     int x, y;
 } Star;
+
+typedef struct
+{
+    int x, y, w, h;
+} Ledge;
 
 typedef struct
 {
@@ -32,6 +40,9 @@ typedef struct
     
     // Images
     SDL_Texture *star;
+    
+    // Ledges
+    Ledge ledges[100];
     
     SDL_Renderer *renderer;
     
@@ -57,10 +68,22 @@ void loadGame(Gamestate *gameState)
     SDL_FreeSurface(starSurface);
     
     // Set up star images
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++)
+    {
         gameState->stars[i].x = random()%640; //i*64;
         gameState->stars[i].y = random()%480; //i*32;
     }
+    
+    // Init ledges
+    for (int i = 0; i < 100; i++)
+    {
+        gameState->ledges[i].w = 256;
+        gameState->ledges[i].h = 64;
+        gameState->ledges[i].x = i * 256;
+        gameState->ledges[i].y = 400;
+    }
+    gameState->ledges[99].x = 350;
+    gameState->ledges[99].y = 200;
 }
 
 int processEvents(SDL_Window *window, Gamestate *gamestate)
@@ -84,6 +107,12 @@ int processEvents(SDL_Window *window, Gamestate *gamestate)
                     case SDLK_ESCAPE:           // Quit out if they press the escape key. Right now this switch doesn't do anything else
                         done = 1;
                         break;
+//                    case SDLK_UP:
+//                        if (gamestate->man.dy == 0.0f)
+//                        {
+//                            gamestate->man.dy = -15;
+//                        }
+//                        break;
                     default:
                         break;
                 }
@@ -99,18 +128,16 @@ int processEvents(SDL_Window *window, Gamestate *gamestate)
     // Check key states for continuous movement
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if ( state[SDL_SCANCODE_LEFT] )
-    {
         gamestate->man.x -= 10;
-    }
-    if (state[SDL_SCANCODE_RIGHT]) {
+    
+    if (state[SDL_SCANCODE_RIGHT])
         gamestate->man.x += 10;
+    if (state[SDL_SCANCODE_UP] && gamestate->man.dy == 0.0f) {
+        gamestate->man.dy = -12;
     }
-    if (state[SDL_SCANCODE_UP]) {
-        gamestate->man.y -= 10;
-    }
-    if (state[SDL_SCANCODE_DOWN]) {
-        gamestate->man.y += 10;
-    }
+//    if (state[SDL_SCANCODE_DOWN]) {
+//        gamestate->man.y += 10;
+//    }
     
     return done;
 }
@@ -128,17 +155,82 @@ void doRender(SDL_Renderer *renderer, Gamestate *gamestate)
 
     // Create SDL_RECT  x    y    w    h
     // Uses coordinates of man object for where to draw
-    SDL_Rect rect = { gamestate->man.x, gamestate->man.y, 80, 80 };
+    SDL_Rect rect = { gamestate->man.x, gamestate->man.y, 48, 48 };
     SDL_RenderFillRect(renderer, &rect);
     
+//    for (int i = 0; i < 100; i++) {
+//        // Draw the image
+//        SDL_Rect beetleRect = { gamestate->stars[i].x, gamestate->stars[i].y, 64, 64 };
+//        SDL_RenderCopy(renderer, gamestate->star, NULL, &beetleRect);
+//    }
+    
+    // Draw Ledges
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    
     for (int i = 0; i < 100; i++) {
-        // Draw the image
-        SDL_Rect beetleRect = { gamestate->stars[i].x, gamestate->stars[i].y, 64, 64 };
-        SDL_RenderCopy(renderer, gamestate->star, NULL, &beetleRect);
+        SDL_Rect ledgeRect = { gamestate->ledges[i].x, gamestate->ledges[i].y, gamestate->ledges[i].w, gamestate->ledges[i].h };
+        SDL_RenderFillRect(renderer, &ledgeRect);
     }
 
     // We're done drawing, present what has been drawn
     SDL_RenderPresent(renderer);
+}
+
+void process(Gamestate *game)
+{
+    // Every frame we need to apply the velocity to the man's position. Then we need to apply gravity to the velocity.
+    Man *man = &game->man;
+    man->y += man->dy;
+    man->dy += GRAVITY;
+}
+
+void collisionDetect(Gamestate *game)
+{
+    // Check for collisions between man and brick ledges
+    for (int i = 0; i < 100; i++)
+    {
+        // Man dimensions and position
+        float mw = 48, mh = 48;
+        float mx = game->man.x;
+        float my = game->man.y;
+        
+        // Ledge dimensions and position
+        float bx = game->ledges[i].x;
+        float by = game->ledges[i].y;
+        float bw = game->ledges[i].w;
+        float bh = game->ledges[i].h;
+        
+        if (my+mh > by && my < by+bh) {     // Check if we're at the same height as a ledge
+            // If the man is standing to the right of the brick but his width is overlapping it
+            if (mx < bx+bw && mx+mw > bx+bw) {
+                // Correct x position
+                game->man.x = bx+bw;
+                mx = bx+bw;
+            } else if (mx+mw > bx && mx < bx)   // If man is standing to the left of the ledge check if there is overlap
+            {
+                game->man.x = bx-mw;
+                mx = bx-mw;
+            }
+        }
+        
+        if (mx+mw > bx && mx < bx+bw) {     // Check if we are at the same horizontal position as a ledge
+            // Are we bumping our head?
+            if (my < by+bh && my > by) {
+                // Correct y position
+                game->man.y = by+bh;
+                
+                // Stop jump velocity
+                game->man.dy = 0.0f;
+            } else if (my+mh > by && my < by)   // Check if our feet are overlapping the ledge
+            {
+                // Correct y position
+                game->man.y = by-mh;
+                
+                // Stop jump velocity
+                game->man.dy = 0.0f;
+            }
+        }
+    }
 }
 
 int main(int argc, char *argv[])
@@ -146,6 +238,8 @@ int main(int argc, char *argv[])
     int processEvents(SDL_Window *window, Gamestate *gamestate);
     void doRender(SDL_Renderer *renderer, Gamestate *gamestate);
     void loadGame(Gamestate *gameState);
+    void collisionDetect(Gamestate *game);
+    
     
     SDL_Window *window;                    // Declare a window
     SDL_Renderer *renderer;                // Declare a renderer
@@ -183,6 +277,12 @@ int main(int argc, char *argv[])
     {
         // Check for SDL events
         done = processEvents(window, &gamestate);
+        
+        // Process gamestate
+        process(&gamestate);
+        
+        // Detect collisions
+        collisionDetect(&gamestate);
         
         // Do render stuff
         doRender(renderer, &gamestate);
